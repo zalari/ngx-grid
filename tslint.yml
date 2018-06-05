@@ -1,0 +1,133 @@
+extends:
+- tslint:latest
+- rxjs-tslint-rules
+
+rulesDirectory:
+- node_modules/codelyzer
+- node_modules/rxjs-tslint
+
+rules:
+  # tslint rules
+  deprecation:
+    severity: warning
+  array-type:
+  - true
+  - array
+  quotemark:
+  - true
+  - single
+  interface-name:
+  - never-prefix
+  max-line-length:
+  - true
+  - 240
+  member-access:
+  - true
+  - no-public
+  member-ordering:
+  - true
+  - order:
+    - public-static-field
+    - public-static-method
+    - private-instance-field
+    - public-instance-field
+    - public-constructor
+    - public-instance-method
+    - private-instance-method
+  no-console:
+  - true
+  - debug
+  - info
+  - log
+  no-empty: false
+  no-implicit-dependencies: false
+  no-string-literal: false
+  no-submodule-imports: false
+  object-literal-key-quotes:
+  - consistent-as-needed
+  object-literal-sort-keys: false
+  one-line: false
+  ordered-imports: false
+  prefer-object-spread: false
+  trailing-comma: false
+  typedef-whitespace:
+  - true
+  - call-signature: nospace
+    index-signature: nospace
+    parameter: nospace
+    property-declaration: nospace
+    variable-declaration: nospace
+  variable-name:
+  - true
+  - check-format
+  - allow-leading-underscore
+
+  # rxjs-tslint
+  # s. https://github.com/ReactiveX/rxjs-tslint#use-rules
+  rxjs-collapse-imports:
+    severity: error
+  rxjs-pipeable-operators-only:
+    severity: error
+  rxjs-no-static-observable-methods:
+    severity: error
+  rxjs-proper-imports:
+    severity: error
+
+  # rxjs-tslint-rules
+  # s. https://blog.angularindepth.com/rxjs-tslint-rules-for-version-6-d10e2482292d
+  rxjs-ban-observables:
+    options:
+    - empty: Use EMPTY
+      never: Use NEVER
+    severity: error
+  rxjs-ban-operators:
+    options:
+    - combineLatest: Use the static combineLatest
+      concat: Use the static concat
+      merge: Use the static merge
+      race: Use the static race
+      zip: Use the static zip
+    severity: error
+  rxjs-no-finnish:
+    severity: error
+# TODO: why is that rule unknown (s. https://goo.gl/2rtD95)?
+#  rxjs-no-internals:
+#    severity: error
+  rxjs-no-subject-unsubscribe:
+    severity: error
+  rxjs-throw-error:
+    severity: error
+
+  # codelyzer rules
+  angular-whitespace:
+  - true
+  - check-interpolation
+  - check-semicolon
+  banana-in-box: true
+  templates-no-negated-async: true
+  directive-selector:
+  - true
+  - attribute
+  - grid
+  - camelCase
+  component-selector:
+  - true
+  - element
+  - grid
+  - kebab-case
+  use-input-property-decorator: true
+  use-output-property-decorator: true
+  use-host-property-decorator: true
+  no-attribute-parameter-decorator: true
+  no-input-rename: true
+  no-output-rename: true
+  no-forward-ref: false
+  use-life-cycle-interface: true
+  use-pipe-transform-interface: true
+  pipe-naming:
+  - true
+  - camelCase
+  - ''
+  component-class-suffix: true
+  directive-class-suffix: true
+  no-access-missing-member: false

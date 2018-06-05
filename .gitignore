@@ -1,0 +1,35 @@
+# Output Directories #
+/dist
+/docs
+
+.classpath
+.settings/
+
+/.temp
+/tmp
+
+.vscode
+
+*.puml
+
+# Dependency directory #
+# https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
+node_modules
+
+# Optional npm cache directory #
+.npm
+npm-debug.log
+
+# IDE Directories #
+.idea
+.metadata
+.project
+
+# Locally stored "Eclipse launch configurations" #
+*.launch
+
+# OS Files #
+.DS_Store
+
+# Misc #
+*~

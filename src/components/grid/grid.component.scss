@@ -1,0 +1,44 @@
+:host {
+  // set default values for smallest breakpoint
+  --grid-gap-xs: 10;
+  --grid-cols-xs: 1;
+  --grid-rows-xs: 1;
+  --grid-col-span-xs: 1;
+  --grid-row-span-xs: 1;
+  --grid-col-start-xs: auto;
+  --grid-row-start-xs: auto;
+
+  display: grid;
+  grid-auto-flow: row dense;
+  grid-auto-rows: 1fr;
+  grid-gap: var(--grid-gap-xs);
+
+  /*
+  @include media-breakpoint-only(xs) {
+    // we want _no_ equal heights on the smallest viewport
+    // because usually we have only one column here...
+    grid-auto-rows: min-content;
+  }
+  */
+
+  // prepare all breakpoints by updating...
+  $breakpoints: xs, sm, md, lg, xl;
+  @each $breakpoint in $breakpoints {
+  /*
+    @include media-breakpoint-up($breakpoint) {
+      // ... the column gap...
+      grid-gap: var(--grid-gap-#{$breakpoint});
+
+      // ... and the columns count
+      grid-template-columns: repeat(var(--grid-cols-#{$breakpoint}), 1fr);
+      grid-template-rows: repeat(var(--grid-rows-#{$breakpoint}), 1fr);
+
+      ::ng-deep .grid-col {
+        // ... and the col and row spans
+        grid-column: var(--grid-col-start-#{$breakpoint}) / span var(--grid-col-span-#{$breakpoint});
+        grid-row: var(--grid-row-start-#{$breakpoint}) / span var(--grid-row-span-#{$breakpoint});
+      }
+    }
+  */
+  }
+}
