@@ -12,8 +12,7 @@ export const GRID_COL_START_PROPERTY = '--grid-col-start';
 export const GRID_ROW_START_PROPERTY = '--grid-row-start';
 
 @Directive({
-  selector: 'gridItem,[gridItem]',
-  exportAs: 'gridItem'
+  selector: '[gridItem]'
 })
 export class GridItemDirective implements OnInit {
 
