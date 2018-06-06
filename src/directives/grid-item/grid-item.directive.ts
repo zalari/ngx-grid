@@ -2,9 +2,9 @@ import { BehaviorSubject } from 'rxjs';
 
 import { Directive, ElementRef, HostBinding, Input, OnInit, Optional } from '@angular/core';
 
-import { GridComponent } from '../../components/grid/grid.component';
-import { Breakpoint } from '../../enums/breakpoint.enum';
 import { getAlignedBreakpoints } from '../../utils/grid.utils';
+import { Breakpoint } from '../../enums/breakpoint.enum';
+import { GridComponent } from '../../components/grid/grid.component';
 
 export const GRID_COL_SPAN_PROPERTY = '--grid-col-span';
 export const GRID_ROW_SPAN_PROPERTY = '--grid-row-span';
@@ -63,7 +63,7 @@ export class GridItemDirective implements OnInit {
   @HostBinding('class.grid-col')
   addClass = true;
 
-  constructor(private _elementRef: ElementRef,
+  constructor(private _elementRef: ElementRef<HTMLElement>,
               @Optional() private _grid: GridComponent) {
     if (!this._grid) {
       throw new Error('The GridItemDirective shall be used inside a GridComponent only');
