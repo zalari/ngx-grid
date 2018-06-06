@@ -19,6 +19,7 @@
   },
   "scripts": {
     "build": "ng-packagr -p package.json && cpx -p README.md dist",
+    "demo": "npm run build && scripts/demo.sh",
     "lint:sass": "sass-lint --verbose --no-exit --config ./sass-lint.yml",
     "lint:ts": "tslint --force --config ./tslint.yml --project ./tsconfig.json",
     "lint": "npm run lint:ts && npm run lint:sass"
