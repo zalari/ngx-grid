@@ -27,27 +27,31 @@ export class GridBreakpointService {
         let styleDefinitions = `
 .ngx-grid {
   /* set default values for smallest breakpoint */
-  --grid-gap-xs: 10;
-  --grid-cols-xs: 1;
-  --grid-rows-xs: 1;
+  --grid-gap: 10;
+  --grid-cols: 1;
+  --grid-rows: 1;
 
   display: grid;
   grid-auto-flow: row dense;
   grid-auto-rows: 1fr;
-  grid-gap: var(--grid-gap-xs);
+  grid-gap: calc(var(--grid-gap) * 1px);
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
 
   @media (min-width: ${this._gridBreakpoints[Breakpoint.ExtraSmall]}px) {
-    /* we want _no_ equal heights on the smallest viewport
-    because usually we have only one column here... */
+    /* we want _no_ equal heights on the smallest viewport because usually we have only one column here... */
     grid-auto-rows: min-content;
   }
 }
 
 .ngx-grid-item {
-  --grid-col-span-xs: 1;
-  --grid-row-span-xs: 1;
-  --grid-col-start-xs: auto;
-  --grid-row-start-xs: auto;
+  --grid-col-span: 1;
+  --grid-row-span: 1;
+  --grid-col-start: auto;
+  --grid-row-start: auto;
+
+  grid-column: var(--grid-col-start) / span var(--grid-col-span);
+  grid-row: var(--grid-row-start) / span var(--grid-row-span);
 }
         `;
 
@@ -59,18 +63,20 @@ export class GridBreakpointService {
 /* prepare all breakpoints by updating... */
 @media (min-width: ${this._gridBreakpoints[breakpoint]}px) {
   .ngx-grid {
-      /* ... the column gap...
-      grid-gap: var(--grid-gap-${breakpoint});
+      /* ... the column gap... */
+      --grid-gap: var(--grid-gap-${breakpoint});
 
       /* ... and the columns count */
-      grid-template-columns: repeat(var(--grid-cols-${breakpoint}), 1fr);
-      grid-template-rows: repeat(var(--grid-rows-${breakpoint}), 1fr);
+      --grid-cols: var(--grid-cols-${breakpoint});
+      --grid-rows: var(--grid-rows-${breakpoint});
   }
 
   .ngx-grid-item {
-      /* ... and the col and row spans */
-      grid-column: var(--grid-col-start-${breakpoint}) / span var(--grid-col-span-${breakpoint});
-      grid-row: var(--grid-row-start-${breakpoint}) / span var(--grid-row-span-${breakpoint});
+      /* ... and the col and row spans and offsets */
+      --grid-col-start: var(--grid-col-start-${breakpoint});
+      --grid-col-span: var(--grid-col-span-${breakpoint});
+      --grid-row-start: var(--grid-row-start-${breakpoint});
+      --grid-row-span: var(--grid-row-span-${breakpoint});
   }
 }
             `;
