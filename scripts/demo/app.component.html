@@ -1,19 +1,13 @@
-<z4i-grid [cols]="1"
-          [cols.md]="2"
+<ul grid
+    [cols]="1"
+    [cols.sm]="2"
+    [cols.md]="3"
+    [cols.lg]="4"
 >
-  <div gridItem
-       [col.span]="1"
+  <li gridItem
+      *ngFor="let i of [1, 2, 3, 4]"
+      [col.span]="1"
   >
-    1
-  </div>
-  <div gridItem
-       [col.span]="1"
-  >
-    2
-  </div>
-  <div gridItem
-       [col.span]="1"
-  >
-    3
-  </div>
-</z4i-grid>
+    {{ i }}
+  </li>
+</ul>

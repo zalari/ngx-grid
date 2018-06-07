@@ -3,3 +3,13 @@ $color-grey-light: #f2f2f2;
 body {
   background-color: $color-grey-light;
 }
+
+.ngx-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &-item {
+
+  }
+}

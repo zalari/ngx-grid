@@ -2,10 +2,11 @@ import { BehaviorSubject } from 'rxjs';
 
 import { Directive, ElementRef, HostBinding, Input, OnInit, Optional } from '@angular/core';
 
-import { getAlignedBreakpoints } from '../../utils/grid.utils';
-import { Breakpoint } from '../../enums/breakpoint.enum';
-import { GridComponent } from '../../components/grid/grid.component';
+import { getAlignedBreakpoints } from '../utils/grid.utils';
+import { Breakpoint } from '../enums/breakpoint.enum';
+import { GridDirective } from './grid.directive';
 
+export const GRID_ITEM_CLASS = 'ngx-grid-item';
 export const GRID_COL_SPAN_PROPERTY = '--grid-col-span';
 export const GRID_ROW_SPAN_PROPERTY = '--grid-row-span';
 export const GRID_COL_START_PROPERTY = '--grid-col-start';
@@ -60,13 +61,13 @@ export class GridItemDirective implements OnInit {
   @Input('row.start.xl') set rowStartXl(rowStart: number | 'auto') { this._setRowStart(rowStart, Breakpoint.ExtraLarge); }
   // @formatter:on
 
-  @HostBinding('class.grid-col')
-  addClass = true;
+  @HostBinding(`class.${GRID_ITEM_CLASS}`)
+  readonly setClass = true;
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
-              @Optional() private _grid: GridComponent) {
+              @Optional() private _grid: GridDirective) {
     if (!this._grid) {
-      throw new Error('The GridItemDirective shall be used inside a GridComponent only');
+      throw new Error('The GridItemDirective shall be used inside a GridDirective only');
     }
   }
 
@@ -119,7 +120,7 @@ export class GridItemDirective implements OnInit {
 
     // update the css custom properties for all breakpoints
     getAlignedBreakpoints(this._colSpan).forEach((alignedColSpan, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_COL_SPAN_PROPERTY}-${alignedBreakpoint}`, alignedColSpan);
+      this._elementRef.nativeElement.style.setProperty(`${GRID_COL_SPAN_PROPERTY}-${alignedBreakpoint}`, `${alignedColSpan}`);
     });
   }
 
@@ -143,7 +144,7 @@ export class GridItemDirective implements OnInit {
 
     // update the css custom properties for all breakpoints
     getAlignedBreakpoints(this._rowSpan).forEach((alignedRowSpan, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_ROW_SPAN_PROPERTY}-${alignedBreakpoint}`, alignedRowSpan);
+      this._elementRef.nativeElement.style.setProperty(`${GRID_ROW_SPAN_PROPERTY}-${alignedBreakpoint}`, `${alignedRowSpan}`);
     });
   }
 
@@ -176,7 +177,7 @@ export class GridItemDirective implements OnInit {
 
     // update the css custom properties for all breakpoints
     getAlignedBreakpoints(this._colStart).forEach((alignedColStart, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_COL_START_PROPERTY}-${alignedBreakpoint}`, alignedColStart);
+      this._elementRef.nativeElement.style.setProperty(`${GRID_COL_START_PROPERTY}-${alignedBreakpoint}`, `${alignedColStart}`);
     });
   }
 
@@ -200,7 +201,7 @@ export class GridItemDirective implements OnInit {
 
     // update the css custom properties for all breakpoints
     getAlignedBreakpoints(this._rowStart).forEach((alignedRowStart, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_ROW_START_PROPERTY}-${alignedBreakpoint}`, alignedRowStart);
+      this._elementRef.nativeElement.style.setProperty(`${GRID_ROW_START_PROPERTY}-${alignedBreakpoint}`, `${alignedRowStart}`);
     });
   }
 

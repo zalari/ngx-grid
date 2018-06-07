@@ -1,20 +1,18 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
 
-import { getAlignedBreakpoints } from '../../utils/grid.utils';
-import { Breakpoint } from '../../enums/breakpoint.enum';
+import { getAlignedBreakpoints } from '../utils/grid.utils';
+import { Breakpoint } from '../enums/breakpoint.enum';
 
+export const GRID_CLASS = 'ngx-grid';
 export const GRID_COLS_PROPERTY = '--grid-cols';
 export const GRID_ROWS_PROPERTY = '--grid-rows';
 
-@Component({
-  selector: 'grid,[grid]',
-  templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+@Directive({
+  selector: '[grid]'
 })
-export class GridComponent {
+export class GridDirective {
 
   private _cols = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
 
@@ -38,7 +36,10 @@ export class GridComponent {
   @Input('rows.xl') set rowsXl(rows: number) { this._setRows(rows, Breakpoint.ExtraLarge); }
   // @formatter:on
 
-  constructor(private _elementRef: ElementRef) {}
+  @HostBinding(`class.${GRID_CLASS}`)
+  readonly setClass = true;
+
+  constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   // retrieves the columns for an optionally providable breakpoint
   getCols(breakpoint: Breakpoint = Breakpoint.ExtraSmall): number | undefined {
@@ -71,7 +72,7 @@ export class GridComponent {
 
     // update the css custom properties for all breakpoints
     getAlignedBreakpoints(this._cols).forEach((alignedCols, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_COLS_PROPERTY}-${alignedBreakpoint}`, alignedCols);
+      this._elementRef.nativeElement.style.setProperty(`${GRID_COLS_PROPERTY}-${alignedBreakpoint}`, `${alignedCols}`);
     });
   }
 
@@ -95,7 +96,7 @@ export class GridComponent {
 
     // update the css custom properties for all breakpoints
     getAlignedBreakpoints(this._rows).forEach((alignedRows, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_ROWS_PROPERTY}-${alignedBreakpoint}`, alignedRows);
+      this._elementRef.nativeElement.style.setProperty(`${GRID_ROWS_PROPERTY}-${alignedBreakpoint}`, `${alignedRows}`);
     });
   }
 

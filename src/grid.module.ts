@@ -1,9 +1,14 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+// Injection tokens
+import { GRID_BREAKPOINTS, gridBreakpoints } from './injection-tokens/grid-breakpoints.injection-token';
 // Directives
-import { GridItemDirective } from './directives/grid-item/grid-item.directive';
-// Components
-import { GridComponent } from './components/grid/grid.component';
+import { GridDirective } from './directives/grid.directive';
+import { GridItemDirective } from './directives/grid-item.directive';
+// Services
+import { GridBreakpointService } from './services/grid-breakpoint.service';
+// Factories
+import { initializeGridBreakpointsFactory } from './utils/grid.utils';
 
 @NgModule({
   imports: [
@@ -12,17 +17,17 @@ import { GridComponent } from './components/grid/grid.component';
   ],
   declarations: [
     // Directives
-    GridItemDirective,
-
-    // Components
-    GridComponent
+    GridDirective,
+    GridItemDirective
+  ],
+  providers: [
+    { provide: GRID_BREAKPOINTS, useValue: gridBreakpoints },
+    { provide: APP_INITIALIZER, useFactory: initializeGridBreakpointsFactory, deps: [GridBreakpointService], multi: true }
   ],
   exports: [
     // Directives
-    GridItemDirective,
-
-    // Components
-    GridComponent
+    GridDirective,
+    GridItemDirective
   ]
 })
 export class GridModule {}
