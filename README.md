@@ -1,8 +1,8 @@
-# Grid module for Angular using Bootstrap
+# Grid module for Angular
 
 ## CSS grids helpers
 
-### Component `<grid>`
+### Directive `[grid]`
 Creates a CSS grid with the provided column count using CSS custom properties.
 
 #### Defining cols:
@@ -31,6 +31,8 @@ Creates a CSS grid with the provided column count using CSS custom properties.
 
 ### Directive `[gridItem]`
 Creates a CSS grid item with the provided column span using CSS custom properties.
+
+**Must** be inside an element with the `grid` directive. 
 
 #### Defining col span:
 * `[col.span]` defines the base column span (alias for `[col.span.xs]`), defaults to `1`.
