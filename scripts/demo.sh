@@ -20,6 +20,9 @@ ng new ${DEMO_NAME} --directory=${DEMO_DIR} --style=scss --routing=false --force
 echo -e "${COLOR_YELLOW}COPY${COLOR_NONE} ${DEMO_DIR}/src/app/app.component.html"
 cp ${DIR_SRC}/demo/app.component.html ${DEMO_DIR}/src/app/app.component.html
 
+echo -e "${COLOR_YELLOW}COPY${COLOR_NONE} ${DEMO_DIR}/src/app/app.component.ts"
+cp ${DIR_SRC}/demo/app.component.ts ${DEMO_DIR}/src/app/app.component.ts
+
 echo -e "${COLOR_YELLOW}COPY${COLOR_NONE} ${DEMO_DIR}/src/app/app.module.ts"
 cp ${DIR_SRC}/demo/app.module.ts ${DEMO_DIR}/src/app/app.module.ts
 

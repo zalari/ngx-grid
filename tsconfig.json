@@ -26,6 +26,9 @@
       "@zalari/ngx-grid": [ "./public_api.ts" ]
     }
   },
+  "include": [
+    "./src/polyfills.ts"
+  ],
   "exclude": [
     ".ng_build"
   ]

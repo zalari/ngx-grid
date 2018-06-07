@@ -8,11 +8,13 @@
   },
   "ngPackage": {
     "lib": {
-      "entryFile": "./src/public_api.ts"
+      "entryFile": "./src/public_api.ts",
+      "languageLevel": ["dom", "es2017"]
     },
     "whitelistedNonPeerDependencies": [
       "angular",
       "classlist.js",
+      "core-js",
       "rxjs",
       "zone.js"
     ]
@@ -32,6 +34,7 @@
     "@angular/compiler-cli": "^6.0.0",
     "@angular/core": "^6.0.0",
     "classlist.js": "^1.1.20150312",
+    "core-js": "^2.5.7",
     "rxjs": "^6.0.0",
     "zone.js": "~0.8.26"
   },

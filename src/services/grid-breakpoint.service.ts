@@ -11,12 +11,19 @@ export const INJECTED_STYLE_ID = 'ngx-grid-style';
 })
 export class GridBreakpointService {
 
+  private _queryListeners = new Map<Breakpoint, MediaQueryList>();
+
   private get _isStyleInjected(): boolean {
     return window.document.getElementById(INJECTED_STYLE_ID) !== null;
   }
 
-  constructor(@Inject(GRID_BREAKPOINTS) private _gridBreakpoints: GridBreakpoints) {}
+  constructor(@Inject(GRID_BREAKPOINTS) private _gridBreakpoints: GridBreakpoints) {
+    // initialize the listener
+    this._initializeQueryListeners();
+  }
 
+  // TODO: ng-packagr allows custom styles by configuration, so move this out
+  // intializes the grid by injecting styles to the head section
   initialize(): Promise<void> {
     return new Promise((resolve) => {
       if (!this._isStyleInjected) {
@@ -38,7 +45,7 @@ export class GridBreakpointService {
   grid-template-columns: repeat(var(--grid-cols), 1fr);
   grid-template-rows: repeat(var(--grid-rows), 1fr);
 
-  @media (min-width: ${this._gridBreakpoints[Breakpoint.ExtraSmall]}px) {
+  @media ${this._buildQuery(Breakpoint.ExtraSmall)} {
     /* we want _no_ equal heights on the smallest viewport because usually we have only one column here... */
     grid-auto-rows: min-content;
   }
@@ -61,7 +68,7 @@ export class GridBreakpointService {
           .forEach((breakpoint: Breakpoint) => {
             styleDefinitions += `
 /* prepare all breakpoints by updating... */
-@media (min-width: ${this._gridBreakpoints[breakpoint]}px) {
+@media ${this._buildQuery(breakpoint)} {
   .ngx-grid {
       /* ... the column gap... */
       --grid-gap: var(--grid-gap-${breakpoint});
@@ -93,6 +100,52 @@ export class GridBreakpointService {
 
       resolve();
     });
+  }
+
+  // registers a media query listener
+  registerListener(breakpoint: Breakpoint, listener: MediaQueryListListener) {
+    // return if breakpoint is unknown
+    if (!Object.values(Breakpoint).includes(breakpoint)) {
+      throw new Error(`The breakpoint "${breakpoint}" is unknown`);
+    }
+
+    // return if breakpoint is not initialized
+    if (!this._queryListeners.has(breakpoint)) {
+      throw new Error(`The breakpoint "${breakpoint}" is not initialized`);
+    }
+
+    // register the listener for the specific breakpoint
+    this._queryListeners.get(breakpoint).addListener(listener);
+  }
+
+  // unregisters a media query listener
+  unregisterListener(breakpoint: Breakpoint, listener: MediaQueryListListener) {
+    // return if breakpoint is unknown
+    if (!Object.values(Breakpoint).includes(breakpoint)) {
+      throw new Error(`The breakpoint "${breakpoint}" is unknown`);
+    }
+
+    // return if breakpoint is not initialized
+    if (!this._queryListeners.has(breakpoint)) {
+      throw new Error(`The breakpoint "${breakpoint}" is not initialized`);
+    }
+
+    // register the listener for the specific breakpoint
+    this._queryListeners.get(breakpoint).removeListener(listener);
+  }
+
+  private _buildQuery(breakpoint: Breakpoint): string {
+    return `(min-width: ${this._gridBreakpoints[breakpoint]}px)`;
+  }
+
+  private _initializeQueryListeners() {
+    Object
+      .keys(this._gridBreakpoints)
+      .forEach((breakpoint: Breakpoint) => {
+        const query = this._buildQuery(breakpoint);
+        const queryListener = window.matchMedia(query);
+        this._queryListeners.set(breakpoint, queryListener);
+      });
   }
 
 }
