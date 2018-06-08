@@ -1,3 +1,9 @@
+<p *ngIf="currentBreakpoint | async as currentBreakpointAsync"
+   class="current-breakpoint"
+>
+  {{ currentBreakpointAsync }}
+</p>
+
 <section>
   <h2>Responsive grid using columns</h2>
 

@@ -1,31 +1,23 @@
-import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Breakpoint, GridBreakpointService } from '@zalari/ngx-grid';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  private _currentBreakpoint = new BehaviorSubject<Breakpoint>(Breakpoint.ExtraSmall);
+  currentBreakpoint: Observable<Breakpoint>;
 
-  constructor(private _gridBreakpointService: GridBreakpointService) {
-    this._registerListeners();
-  }
+  constructor(private _gridBreakpointService: GridBreakpointService) {}
 
-  private _registerListeners() {
-    Object
-      .values(Breakpoint)
-      .forEach((breakpoint: Breakpoint) => {
-        this._gridBreakpointService.registerListener(breakpoint, (queryList) => this._activateBreakpoint(breakpoint, queryList));
-      });
-  }
-
-  private _activateBreakpoint(breakpoint: Breakpoint, queryList: MediaQueryList) {
-    console.log(breakpoint, queryList.matches);
+  ngOnInit() {
+    // s. https://github.com/angular/angular/issues/12129#issuecomment-252095727
+    this.currentBreakpoint = this._gridBreakpointService.currentBreakpoint;
   }
 
 }

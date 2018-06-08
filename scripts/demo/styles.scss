@@ -32,17 +32,28 @@ ul {
 
 pre {
   border: 1px dashed $color-grey;
-  border-radius: 5px;
+  border-radius: 3px;
   margin: 0 0 10px;
   padding: 10px;
   white-space: pre-line;
+}
+
+.current-breakpoint {
+  background-color: $color-grey;
+  border-bottom-left-radius: 3px;
+  color: $color-white;
+  margin: 0;
+  padding: 3px 5px;
+  position: fixed;
+  right: 0;
+  top: 0;
 }
 
 .ngx-grid {
 
   &-item {
     background-color: $color-white;
-    border-radius: 5px;
+    border-radius: 3px;
     padding: calc(var(--grid-gap) * 1px);
   }
 }
