@@ -5,7 +5,6 @@
 DIR_EXEC=$(pwd)
 DIR_SRC=$(cd "$(dirname "$0")"; pwd)
 
-DEMO_PORT=4444
 DEMO_NAME=demo
 DEMO_DIR=.temp
 
@@ -35,7 +34,3 @@ rm -rf ${DIR_EXEC}/${DEMO_DIR}/node_modules/@zalari/ngx-grid
 mkdir -p ${DIR_EXEC}/${DEMO_DIR}/node_modules/@zalari/ngx-grid
 cd ${DIR_SRC}/../
 cp -rf dist/* ${DIR_EXEC}/${DEMO_DIR}/node_modules/@zalari/ngx-grid
-
-## start the demo
-#cd ${DIR_EXEC}/${DEMO_DIR} && ng serve --port ${DEMO_PORT}
-cd ${DIR_EXEC}/${DEMO_DIR} && ng serve --port ${DEMO_PORT} --watch=false --progress=false --live-reload=false --open=true
