@@ -1,6 +1,7 @@
 # Output Directories #
 /dist
 /docs
+/demo
 
 .classpath
 .settings/
