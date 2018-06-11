@@ -34,13 +34,3 @@ rm -rf ${DIR_EXEC}/${DEMO_DIR}/node_modules/@zalari/ngx-grid
 mkdir -p ${DIR_EXEC}/${DEMO_DIR}/node_modules/@zalari/ngx-grid
 cd ${DIR_SRC}/../
 cp -rf dist/* ${DIR_EXEC}/${DEMO_DIR}/node_modules/@zalari/ngx-grid
-
-# buid the demo app
-cd ${DIR_EXEC}/${DEMO_DIR} && npm run build --prod --base-href=${DEMO_DIST}
-
-# copy the built folder to target
-rm -rf ${DIR_EXEC}/${DEMO_DIST}
-mv ${DIR_EXEC}/${DEMO_DIR}/dist/* ${DIR_EXEC}/${DEMO_DIST}
-
-# remove working directory
-# rm -rf ${DIR_EXEC}/${DEMO_DIR}
