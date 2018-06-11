@@ -5,10 +5,14 @@ node_js:
 script:
   # build library and prepare demo application
   - npm run build
+  # set the base href
+  - BASE='/'$(echo "${TRAVIS_REPO_SLUG}" | sed 's/^.*\/\(.*\)$/\1/')'/'
+  - npm run ng config projects.demo.architect.build.options.baseHref "'${BASE}'"
+  - npm run ng config projects.demo.architect.build.options.deployUrl "'${BASE}'"
   # buid the demo application
-  - cd .temp && npm run build --prod --base-href=/ngx-grid/
+  - cd .temp && npm run build -- --prod --progress=false
   # copy the built folder to target
-  - mv dist/* ../gh-pages
+  - mkdir -p ../gh-pages && mv dist/demo/* ../gh-pages
 
 deploy:
   provider: pages
