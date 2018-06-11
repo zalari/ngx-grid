@@ -5,12 +5,15 @@ node_js:
 script:
   # build library and prepare demo application
   - npm run build
+  # change into working directory
+  - cd .temp
   # set the base href
   - BASE='/'$(echo "${TRAVIS_REPO_SLUG}" | sed 's/^.*\/\(.*\)$/\1/')'/'
+  - echo "set base to ${BASE}"
   - npm run ng config projects.demo.architect.build.options.baseHref "'${BASE}'"
   - npm run ng config projects.demo.architect.build.options.deployUrl "'${BASE}'"
   # buid the demo application
-  - cd .temp && npm run build -- --prod --progress=false
+  - npm run build -- --prod --progress=false
   # copy the built folder to target
   - mkdir -p ../gh-pages && mv dist/demo/* ../gh-pages
 
