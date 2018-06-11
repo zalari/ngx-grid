@@ -41,6 +41,7 @@ rules:
   - log
   no-empty: false
   no-implicit-dependencies: false
+  no-reference: false
   no-string-literal: false
   no-submodule-imports: false
   object-literal-key-quotes:
@@ -114,7 +115,6 @@ rules:
   - true
   - element
   - grid
-  - kebab-case
   use-input-property-decorator: true
   use-output-property-decorator: true
   use-host-property-decorator: true

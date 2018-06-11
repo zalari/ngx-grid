@@ -1,4 +1,3 @@
-
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -12,7 +11,7 @@
     "noUnusedParameters": false,
     "target": "es5",
     "typeRoots": [
-      "node_modules/@types"
+      "./node_modules/@types"
     ],
     "lib": [
       "es2017",
@@ -27,6 +26,9 @@
       "@zalari/ngx-grid": [ "./public_api.ts" ]
     }
   },
+  "include": [
+    "./src/polyfills.ts"
+  ],
   "exclude": [
     ".ng_build"
   ]

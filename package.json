@@ -8,17 +8,25 @@
   },
   "ngPackage": {
     "lib": {
-      "entryFile": "./src/public_api.ts"
+      "entryFile": "./src/public_api.ts",
+      "languageLevel": [
+        "dom",
+        "es2017"
+      ]
     },
     "whitelistedNonPeerDependencies": [
       "angular",
       "classlist.js",
+      "core-js",
       "rxjs",
       "zone.js"
     ]
   },
   "scripts": {
-    "build": "ng-packagr -p package.json && cpx -p README.md dist",
+    "build:lib": "ng-packagr -p package.json && cpx -p README.md dist",
+    "build:demo": "scripts/demo.sh",
+    "build": "npm run build:lib && npm run build:demo",
+    "start": "npm run build && cd .temp && ng serve --port 4444 --watch=false --progress=false --live-reload=false --open=true",
     "lint:sass": "sass-lint --verbose --no-exit --config ./sass-lint.yml",
     "lint:ts": "tslint --force --config ./tslint.yml --project ./tsconfig.json",
     "lint": "npm run lint:ts && npm run lint:sass"
@@ -31,10 +39,12 @@
     "@angular/compiler-cli": "^6.0.0",
     "@angular/core": "^6.0.0",
     "classlist.js": "^1.1.20150312",
+    "core-js": "^2.5.7",
     "rxjs": "^6.0.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
+    "@angular/cli": "6.0.7",
     "codelyzer": "4.3.0",
     "ng-packagr": "3.0.1",
     "rxjs-tslint": "0.1.4",

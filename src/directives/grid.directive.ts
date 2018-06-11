@@ -1,24 +1,25 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
 
-import { getAlignedBreakpoints } from '../../utils/grid.utils';
-import { Breakpoint } from '../../enums/breakpoint.enum';
+import { getAlignedBreakpoints } from '../utils/grid.utils';
+import { Breakpoint } from '../enums/breakpoint.enum';
 
+export const GRID_CLASS = 'ngx-grid';
 export const GRID_COLS_PROPERTY = '--grid-cols';
 export const GRID_ROWS_PROPERTY = '--grid-rows';
+export const GRID_GAP_PROPERTY = '--grid-gap';
 
-@Component({
-  selector: 'grid,[grid]',
-  templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+@Directive({
+  selector: '[grid]'
 })
-export class GridComponent {
+export class GridDirective {
 
   private _cols = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
 
   private _rows = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
+
+  private _gap = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
 
   // @formatter:off
   @Input('cols') set cols(cols: number) { this.colsXs = cols; }
@@ -38,7 +39,19 @@ export class GridComponent {
   @Input('rows.xl') set rowsXl(rows: number) { this._setRows(rows, Breakpoint.ExtraLarge); }
   // @formatter:on
 
-  constructor(private _elementRef: ElementRef) {}
+  // @formatter:off
+  @Input('gap') set gap(gap: number) { this.gapXs = gap; }
+  @Input('gap.xs') set gapXs(gap: number) { this._setGap(gap, Breakpoint.ExtraSmall); }
+  @Input('gap.sm') set gapSm(gap: number) { this._setGap(gap, Breakpoint.Small); }
+  @Input('gap.md') set gapMd(gap: number) { this._setGap(gap, Breakpoint.Medium); }
+  @Input('gap.lg') set gapLg(gap: number) { this._setGap(gap, Breakpoint.Large); }
+  @Input('gap.xl') set gapXl(gap: number) { this._setGap(gap, Breakpoint.ExtraLarge); }
+  // @formatter:on
+
+  @HostBinding(`class.${GRID_CLASS}`)
+  readonly setClass = true;
+
+  constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   // retrieves the columns for an optionally providable breakpoint
   getCols(breakpoint: Breakpoint = Breakpoint.ExtraSmall): number | undefined {
@@ -71,7 +84,7 @@ export class GridComponent {
 
     // update the css custom properties for all breakpoints
     getAlignedBreakpoints(this._cols).forEach((alignedCols, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_COLS_PROPERTY}-${alignedBreakpoint}`, alignedCols);
+      this._elementRef.nativeElement.style.setProperty(`${GRID_COLS_PROPERTY}-${alignedBreakpoint}`, `${alignedCols}`);
     });
   }
 
@@ -95,7 +108,31 @@ export class GridComponent {
 
     // update the css custom properties for all breakpoints
     getAlignedBreakpoints(this._rows).forEach((alignedRows, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_ROWS_PROPERTY}-${alignedBreakpoint}`, alignedRows);
+      this._elementRef.nativeElement.style.setProperty(`${GRID_ROWS_PROPERTY}-${alignedBreakpoint}`, `${alignedRows}`);
+    });
+  }
+
+  // sets the column count for a specific breakpoint
+  private _setGap(gap: number, breakpoint: Breakpoint = Breakpoint.ExtraSmall) {
+    // create the breakpoint if it does not exist yet
+    if (!this._gap.has(breakpoint)) {
+      this._gap.set(breakpoint, new BehaviorSubject(undefined));
+    }
+
+    const breakpointGap = this._gap.get(breakpoint);
+    const currentGap = breakpointGap.getValue();
+
+    // do not update if the value hasn't changed
+    if (gap === currentGap) {
+      return;
+    }
+
+    // update the gap for the breakpoint
+    breakpointGap.next(gap);
+
+    // update the css custom properties for all breakpoints
+    getAlignedBreakpoints(this._gap).forEach((alignedGap, alignedBreakpoint) => {
+      this._elementRef.nativeElement.style.setProperty(`${GRID_GAP_PROPERTY}-${alignedBreakpoint}`, `${alignedGap}`);
     });
   }
 

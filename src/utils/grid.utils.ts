@@ -1,6 +1,12 @@
 import { BehaviorSubject } from 'rxjs';
 
 import { Breakpoint } from '../enums/breakpoint.enum';
+import { GridBreakpointService } from '../services/grid-breakpoint.service';
+
+// provider factory method
+export const initializeGridBreakpointsFactory = (gridBreakpointService: GridBreakpointService) => {
+  return (): Promise<void> => gridBreakpointService.initialize();
+};
 
 // aligns the values of a given breakpoint map
 export function getAlignedBreakpoints<T>(map: Map<Breakpoint, BehaviorSubject<T | undefined>>): Map<Breakpoint, T> {
