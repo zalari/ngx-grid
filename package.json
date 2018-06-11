@@ -23,8 +23,10 @@
     ]
   },
   "scripts": {
-    "build": "ng-packagr -p package.json && cpx -p README.md dist",
-    "demo": "npm run build && scripts/demo.sh",
+    "build:lib": "ng-packagr -p package.json && cpx -p README.md dist",
+    "build:demo": "scripts/demo.sh",
+    "build": "npm run build:lib && npm run build:demo",
+    "start": "npm run build && cd .temp && ng serve --port 4444 --watch=false --progress=false --live-reload=false --open=true",
     "lint:sass": "sass-lint --verbose --no-exit --config ./sass-lint.yml",
     "lint:ts": "tslint --force --config ./tslint.yml --project ./tsconfig.json",
     "lint": "npm run lint:ts && npm run lint:sass"
