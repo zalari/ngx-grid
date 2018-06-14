@@ -2,7 +2,7 @@
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "@zalari/ngx-grid",
   "description": "A grid system for Angular.",
-  "version": "0.0.1",
+  "version": "0.0.1-SNAPSHOT",
   "publishConfig": {
     "access": "public"
   },
