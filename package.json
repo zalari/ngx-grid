@@ -29,7 +29,8 @@
     "start": "npm run build && cd .temp && ng serve --port 4444 --watch=false --progress=false --live-reload=false --open=true",
     "lint:sass": "sass-lint --verbose --no-exit --config ./sass-lint.yml",
     "lint:ts": "tslint --force --config ./tslint.yml --project ./tsconfig.json",
-    "lint": "npm run lint:ts && npm run lint:sass"
+    "lint": "npm run lint:ts && npm run lint:sass",
+    "package": "npm run build:lib"
   },
   "author": "Zalari <info@zalari.de>",
   "license": "MIT",
