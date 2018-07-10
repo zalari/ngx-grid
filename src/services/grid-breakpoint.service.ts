@@ -39,12 +39,21 @@ export class GridBreakpointService {
 
         // prepare style sheet
         let styleDefinitions = `
-          .ngx-grid {
-            /* set default values for smallest breakpoint */
+          :root {
+            /* set default values for smallest breakpoint... */
+            /* ... for the grids itselfs... */
             --grid-gap: 10;
             --grid-cols: 1;
             --grid-rows: 1;
-
+            
+            /* ... and for the grid columns */
+            --grid-col-span: 1;
+            --grid-row-span: 1;
+            --grid-col-start: auto;
+            --grid-row-start: auto;
+          }
+        
+          .ngx-grid {
             display: grid;
             grid-auto-flow: row dense;
             grid-auto-rows: 1fr;
@@ -59,11 +68,6 @@ export class GridBreakpointService {
           }
 
           .ngx-grid-item {
-            --grid-col-span: 1;
-            --grid-row-span: 1;
-            --grid-col-start: auto;
-            --grid-row-start: auto;
-
             grid-column: var(--grid-col-start) / span var(--grid-col-span);
             grid-row: var(--grid-row-start) / span var(--grid-row-span);
           }
@@ -76,16 +80,14 @@ export class GridBreakpointService {
             styleDefinitions += `
               /* prepare all breakpoints by updating... */
               @media ${this._buildQuery(breakpoint)} {
-                .ngx-grid {
+                :root {
                     /* ... the column gap... */
                     --grid-gap: var(--grid-gap-${breakpoint});
 
                     /* ... and the columns count */
                     --grid-cols: var(--grid-cols-${breakpoint});
                     --grid-rows: var(--grid-rows-${breakpoint});
-                }
-
-                .ngx-grid-item {
+                    
                     /* ... and the col and row spans and offsets */
                     --grid-col-start: var(--grid-col-start-${breakpoint});
                     --grid-col-span: var(--grid-col-span-${breakpoint});
