@@ -2,8 +2,8 @@ import { BehaviorSubject } from 'rxjs';
 
 import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
 
-import { getAlignedBreakpoints } from '../utils/grid.utils';
 import { Breakpoint } from '../enums/breakpoint.enum';
+import { GridBreakpointService } from '../services/grid-breakpoint.service';
 
 export const GRID_CLASS = 'ngx-grid';
 export const GRID_COLS_PROPERTY = '--grid-cols';
@@ -15,11 +15,11 @@ export const GRID_GAP_PROPERTY = '--grid-gap';
 })
 export class GridDirective {
 
-  private _cols = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
+  private _cols = new Map<string, BehaviorSubject<number | undefined>>();
 
-  private _rows = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
+  private _rows = new Map<string, BehaviorSubject<number | undefined>>();
 
-  private _gap = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
+  private _gap = new Map<string, BehaviorSubject<number | undefined>>();
 
   // @formatter:off
   @Input('cols') set cols(cols: number) { this.colsXs = cols; }
@@ -51,10 +51,11 @@ export class GridDirective {
   @HostBinding(`class.${GRID_CLASS}`)
   readonly setClass = true;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>) {}
+  constructor(private _elementRef: ElementRef<HTMLElement>,
+              private _gridBreakpointService: GridBreakpointService) {}
 
   // retrieves the columns for an optionally providable breakpoint
-  getCols(breakpoint: Breakpoint = Breakpoint.ExtraSmall): number | undefined {
+  getCols(breakpoint: string = this._gridBreakpointService.smallestBreakpoint): number | undefined {
     // get the current value of the breakpoint (might be undefined)
     if (this._cols.has(breakpoint)) {
       return this._cols.get(breakpoint).getValue();
@@ -65,7 +66,7 @@ export class GridDirective {
   }
 
   // sets the column count for a specific breakpoint
-  private _setCols(cols: number, breakpoint: Breakpoint = Breakpoint.ExtraSmall) {
+  private _setCols(cols: number, breakpoint: string = this._gridBreakpointService.smallestBreakpoint) {
     // create the breakpoint if it does not exist yet
     if (!this._cols.has(breakpoint)) {
       this._cols.set(breakpoint, new BehaviorSubject(undefined));
@@ -83,13 +84,16 @@ export class GridDirective {
     breakpointCols.next(cols);
 
     // update the css custom properties for all breakpoints
-    getAlignedBreakpoints(this._cols).forEach((alignedCols, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_COLS_PROPERTY}-${alignedBreakpoint}`, `${alignedCols}`);
-    });
+    console.log(this._cols, this._gridBreakpointService.getAlignedBreakpoints(this._cols))
+    this._gridBreakpointService
+      .getAlignedBreakpoints(this._cols)
+      .forEach((alignedCols, alignedBreakpoint) => {
+        this._elementRef.nativeElement.style.setProperty(`${GRID_COLS_PROPERTY}-${alignedBreakpoint}`, `${alignedCols}`);
+      });
   }
 
   // sets the column count for a specific breakpoint
-  private _setRows(rows: number, breakpoint: Breakpoint = Breakpoint.ExtraSmall) {
+  private _setRows(rows: number, breakpoint: string = this._gridBreakpointService.smallestBreakpoint) {
     // create the breakpoint if it does not exist yet
     if (!this._rows.has(breakpoint)) {
       this._rows.set(breakpoint, new BehaviorSubject(undefined));
@@ -107,13 +111,15 @@ export class GridDirective {
     breakpointRows.next(rows);
 
     // update the css custom properties for all breakpoints
-    getAlignedBreakpoints(this._rows).forEach((alignedRows, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_ROWS_PROPERTY}-${alignedBreakpoint}`, `${alignedRows}`);
-    });
+    this._gridBreakpointService
+      .getAlignedBreakpoints(this._rows)
+      .forEach((alignedRows, alignedBreakpoint) => {
+        this._elementRef.nativeElement.style.setProperty(`${GRID_ROWS_PROPERTY}-${alignedBreakpoint}`, `${alignedRows}`);
+      });
   }
 
   // sets the column count for a specific breakpoint
-  private _setGap(gap: number, breakpoint: Breakpoint = Breakpoint.ExtraSmall) {
+  private _setGap(gap: number, breakpoint: string = this._gridBreakpointService.smallestBreakpoint) {
     // create the breakpoint if it does not exist yet
     if (!this._gap.has(breakpoint)) {
       this._gap.set(breakpoint, new BehaviorSubject(undefined));
@@ -131,9 +137,11 @@ export class GridDirective {
     breakpointGap.next(gap);
 
     // update the css custom properties for all breakpoints
-    getAlignedBreakpoints(this._gap).forEach((alignedGap, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_GAP_PROPERTY}-${alignedBreakpoint}`, `${alignedGap}`);
-    });
+    this._gridBreakpointService
+      .getAlignedBreakpoints(this._gap)
+      .forEach((alignedGap, alignedBreakpoint) => {
+        this._elementRef.nativeElement.style.setProperty(`${GRID_GAP_PROPERTY}-${alignedBreakpoint}`, `${alignedGap}`);
+      });
   }
 
 }

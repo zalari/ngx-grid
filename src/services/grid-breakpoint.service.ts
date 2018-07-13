@@ -28,6 +28,10 @@ export class GridBreakpointService {
     return this._currentBreakpoint.asObservable();
   }
 
+  get smallestBreakpoint(): string {
+    return this._smallestBreakpoint;
+  }
+
   constructor(@Inject(GRID_BREAKPOINTS) private readonly _gridBreakpoints: GridBreakpoints) {
     // ensure breakpoint sorting
     this._breakpoints = this._sortBreakpoints(this._gridBreakpoints);
@@ -154,6 +158,31 @@ export class GridBreakpointService {
     this._queryListeners
       .get(breakpoint)
       .removeListener(listener);
+  }
+
+  getAlignedBreakpoints<T>(map: Map<string, BehaviorSubject<T | undefined>>): Map<string, T> {
+    // prepare breakpoints
+    const breakpoints = new Map();
+    Array
+      .from(this._breakpoints.keys())
+      .map(breakpoint => {
+        // get entry corresponding to the breakpoint (might be undefined)
+        if (map.has(breakpoint)) {
+          return [breakpoint, map.get(breakpoint).getValue()];
+        }
+        // no breakpoint defined
+        return [breakpoint, undefined];
+      })
+      .reduce(([previousBreakpoint, previousValue], [currentBreakpoint, currentValue]) => {
+        // the aligned value is the previous one if the current is undefined
+        const alignedValue = currentValue === undefined ? previousValue : currentValue;
+        // update the results map
+        breakpoints.set(currentBreakpoint, alignedValue);
+        // return the currently aligned entry
+        return [currentBreakpoint, alignedValue];
+      }, []);
+
+    return breakpoints;
   }
 
   private _sortBreakpoints(breakpoints: GridBreakpoints): Map<string, number> {

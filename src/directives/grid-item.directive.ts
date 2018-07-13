@@ -2,8 +2,8 @@ import { BehaviorSubject } from 'rxjs';
 
 import { Directive, ElementRef, HostBinding, Input, OnInit, Optional } from '@angular/core';
 
-import { getAlignedBreakpoints } from '../utils/grid.utils';
 import { Breakpoint } from '../enums/breakpoint.enum';
+import { GridBreakpointService } from '../services/grid-breakpoint.service';
 import { GridDirective } from './grid.directive';
 
 export const GRID_ITEM_CLASS = 'ngx-grid-item';
@@ -17,13 +17,13 @@ export const GRID_ROW_START_PROPERTY = '--grid-row-start';
 })
 export class GridItemDirective implements OnInit {
 
-  private _colSpan = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
+  private _colSpan = new Map<string, BehaviorSubject<number | undefined>>();
 
-  private _rowSpan = new Map<Breakpoint, BehaviorSubject<number | undefined>>();
+  private _rowSpan = new Map<string, BehaviorSubject<number | undefined>>();
 
-  private _colStart = new Map<Breakpoint, BehaviorSubject<number | 'auto' | undefined>>();
+  private _colStart = new Map<string, BehaviorSubject<number | 'auto' | undefined>>();
 
-  private _rowStart = new Map<Breakpoint, BehaviorSubject<number | 'auto' | undefined>>();
+  private _rowStart = new Map<string, BehaviorSubject<number | 'auto' | undefined>>();
 
   // @formatter:off
   @Input('col.span') set colSpan(colSpan: number) { this.colSpanXs = colSpan; }
@@ -65,6 +65,7 @@ export class GridItemDirective implements OnInit {
   readonly setClass = true;
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
+              private _gridBreakpointService: GridBreakpointService,
               @Optional() private _grid: GridDirective) {
     if (!this._grid) {
       throw new Error('The GridItemDirective shall be used inside a GridDirective only');
@@ -73,28 +74,28 @@ export class GridItemDirective implements OnInit {
 
   ngOnInit() {
     // set default value for the column span
-    if (!this._colSpan.has(Breakpoint.ExtraSmall)) {
-      this._setColSpan(1, Breakpoint.ExtraSmall);
+    if (!this._colSpan.has(this._gridBreakpointService.smallestBreakpoint)) {
+      this._setColSpan(1, this._gridBreakpointService.smallestBreakpoint);
     }
 
     // set default value for the row span
-    if (!this._rowSpan.has(Breakpoint.ExtraSmall)) {
-      this._setRowSpan(1, Breakpoint.ExtraSmall);
+    if (!this._rowSpan.has(this._gridBreakpointService.smallestBreakpoint)) {
+      this._setRowSpan(1, this._gridBreakpointService.smallestBreakpoint);
     }
 
     // set default value for the column offset
-    if (!this._colStart.has(Breakpoint.ExtraSmall)) {
-      this._setColStart('auto', Breakpoint.ExtraSmall);
+    if (!this._colStart.has(this._gridBreakpointService.smallestBreakpoint)) {
+      this._setColStart('auto', this._gridBreakpointService.smallestBreakpoint);
     }
 
     // set default value for the row offset
-    if (!this._rowStart.has(Breakpoint.ExtraSmall)) {
-      this._setRowStart('auto', Breakpoint.ExtraSmall);
+    if (!this._rowStart.has(this._gridBreakpointService.smallestBreakpoint)) {
+      this._setRowStart('auto', this._gridBreakpointService.smallestBreakpoint);
     }
   }
 
   // sets the column count for a specific breakpoint
-  private _setColSpan(colSpan: number, breakpoint: Breakpoint = Breakpoint.ExtraSmall) {
+  private _setColSpan(colSpan: number, breakpoint: string = this._gridBreakpointService.smallestBreakpoint) {
     // create the breakpoint if it does not exist yet
     if (!this._colSpan.has(breakpoint)) {
       this._colSpan.set(breakpoint, new BehaviorSubject(undefined));
@@ -119,13 +120,15 @@ export class GridItemDirective implements OnInit {
     breakpointColSpan.next(colSpan);
 
     // update the css custom properties for all breakpoints
-    getAlignedBreakpoints(this._colSpan).forEach((alignedColSpan, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_COL_SPAN_PROPERTY}-${alignedBreakpoint}`, `${alignedColSpan}`);
-    });
+    this._gridBreakpointService
+      .getAlignedBreakpoints(this._colSpan)
+      .forEach((alignedColSpan, alignedBreakpoint) => {
+        this._elementRef.nativeElement.style.setProperty(`${GRID_COL_SPAN_PROPERTY}-${alignedBreakpoint}`, `${alignedColSpan}`);
+      });
   }
 
   // sets the row count for a specific breakpoint
-  private _setRowSpan(rowSpan: number, breakpoint: Breakpoint = Breakpoint.ExtraSmall) {
+  private _setRowSpan(rowSpan: number, breakpoint: string = this._gridBreakpointService.smallestBreakpoint) {
     // create the breakpoint if it does not exist yet
     if (!this._rowSpan.has(breakpoint)) {
       this._rowSpan.set(breakpoint, new BehaviorSubject(undefined));
@@ -143,19 +146,21 @@ export class GridItemDirective implements OnInit {
     breakpointRowSpan.next(rowSpan);
 
     // update the css custom properties for all breakpoints
-    getAlignedBreakpoints(this._rowSpan).forEach((alignedRowSpan, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_ROW_SPAN_PROPERTY}-${alignedBreakpoint}`, `${alignedRowSpan}`);
-    });
+    this._gridBreakpointService
+      .getAlignedBreakpoints(this._rowSpan)
+      .forEach((alignedRowSpan, alignedBreakpoint) => {
+        this._elementRef.nativeElement.style.setProperty(`${GRID_ROW_SPAN_PROPERTY}-${alignedBreakpoint}`, `${alignedRowSpan}`);
+      });
   }
 
   // sets the column offset for a specific breakpoint
-  private _setColStart(colStart: number | 'auto', breakpoint: Breakpoint = Breakpoint.ExtraSmall) {
+  private _setColStart(colStart: number | 'auto', breakpoint: string = this._gridBreakpointService.smallestBreakpoint) {
     // create the breakpoint if it does not exist yet
     if (!this._colStart.has(breakpoint)) {
       this._colStart.set(breakpoint, new BehaviorSubject(undefined));
     }
 
-    const currentColSpan = getAlignedBreakpoints(this._colSpan).get(breakpoint);
+    const currentColSpan = this._gridBreakpointService.getAlignedBreakpoints(this._colSpan).get(breakpoint);
     const availableColStart = this._grid.getCols(breakpoint) - currentColSpan + 1;
     const breakpointColStart = this._colStart.get(breakpoint);
     const currentColStart = breakpointColStart.getValue();
@@ -176,13 +181,15 @@ export class GridItemDirective implements OnInit {
     breakpointColStart.next(colStart);
 
     // update the css custom properties for all breakpoints
-    getAlignedBreakpoints(this._colStart).forEach((alignedColStart, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_COL_START_PROPERTY}-${alignedBreakpoint}`, `${alignedColStart}`);
-    });
+    this._gridBreakpointService
+      .getAlignedBreakpoints(this._colStart)
+      .forEach((alignedColStart, alignedBreakpoint) => {
+        this._elementRef.nativeElement.style.setProperty(`${GRID_COL_START_PROPERTY}-${alignedBreakpoint}`, `${alignedColStart}`);
+      });
   }
 
   // sets the row offset for a specific breakpoint
-  private _setRowStart(rowStart: number | 'auto', breakpoint: Breakpoint = Breakpoint.ExtraSmall) {
+  private _setRowStart(rowStart: number | 'auto', breakpoint: string = this._gridBreakpointService.smallestBreakpoint) {
     // create the breakpoint if it does not exist yet
     if (!this._rowStart.has(breakpoint)) {
       this._rowStart.set(breakpoint, new BehaviorSubject(undefined));
@@ -200,9 +207,11 @@ export class GridItemDirective implements OnInit {
     breakpointRowStart.next(rowStart);
 
     // update the css custom properties for all breakpoints
-    getAlignedBreakpoints(this._rowStart).forEach((alignedRowStart, alignedBreakpoint) => {
-      this._elementRef.nativeElement.style.setProperty(`${GRID_ROW_START_PROPERTY}-${alignedBreakpoint}`, `${alignedRowStart}`);
-    });
+    this._gridBreakpointService
+      .getAlignedBreakpoints(this._rowStart)
+      .forEach((alignedRowStart, alignedBreakpoint) => {
+        this._elementRef.nativeElement.style.setProperty(`${GRID_ROW_START_PROPERTY}-${alignedBreakpoint}`, `${alignedRowStart}`);
+      });
   }
 
 }

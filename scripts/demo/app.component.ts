@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Breakpoint, GridBreakpointService } from '@zalari/ngx-grid';
+import { GridBreakpointService } from '@zalari/ngx-grid';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +13,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private _subscriptions = new Set<Subscription>();
 
-  currentBreakpoint: Breakpoint;
+  currentBreakpoint: string;
 
   constructor(private _gridBreakpointService: GridBreakpointService,
               private _changeDetector: ChangeDetectorRef) {}
