@@ -80,7 +80,7 @@ export class GridBreakpointService {
             styleDefinitions += `
               /* prepare all breakpoints by updating... */
               @media ${this._buildQuery(breakpoint)} {
-                :root {
+                .ngx-grid {
                     /* ... the column gap... */
                     --grid-gap: var(--grid-gap-${breakpoint});
 
