@@ -10,6 +10,9 @@ rules:
   # tslint rules
   deprecation:
     severity: warning
+  arrow-parens:
+  - true
+  - ban-single-arg-parens
   array-type:
   - true
   - array

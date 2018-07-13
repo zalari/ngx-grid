@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Breakpoint, GridBreakpointService } from '@zalari/ngx-grid';
 
 @Component({
@@ -9,15 +9,29 @@ import { Breakpoint, GridBreakpointService } from '@zalari/ngx-grid';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
-  currentBreakpoint: Observable<Breakpoint>;
+  private _subscriptions = new Set<Subscription>();
 
-  constructor(private _gridBreakpointService: GridBreakpointService) {}
+  currentBreakpoint: Breakpoint;
+
+  constructor(private _gridBreakpointService: GridBreakpointService,
+              private _changeDetector: ChangeDetectorRef) {}
 
   ngOnInit() {
     // s. https://github.com/angular/angular/issues/12129#issuecomment-252095727
-    this.currentBreakpoint = this._gridBreakpointService.currentBreakpoint;
+    this._subscriptions.add(
+      this._gridBreakpointService.currentBreakpoint.subscribe(breakpoint => {
+        this.currentBreakpoint = breakpoint;
+        this._changeDetector.detectChanges();
+        console.log(this.currentBreakpoint)
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    // unsubscribe all
+    this._subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
 }
