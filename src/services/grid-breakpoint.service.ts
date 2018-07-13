@@ -158,6 +158,9 @@ export class GridBreakpointService {
 
         // register internal listener
         queryListener.addListener((queryList) => this._breakpointQueryListener(breakpoint, queryList));
+
+        // call listener initially
+        this._breakpointQueryListener(breakpoint, queryListener);
       });
   }
 
