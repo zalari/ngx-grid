@@ -24,7 +24,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this._gridBreakpointService.currentBreakpoint.subscribe(breakpoint => {
         this.currentBreakpoint = breakpoint;
         this._changeDetector.detectChanges();
-        console.log(this.currentBreakpoint)
       })
     );
   }
