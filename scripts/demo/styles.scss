@@ -41,12 +41,12 @@ pre {
 .current-breakpoint {
   background-color: $color-grey;
   border-bottom-left-radius: 3px;
+  bottom: 0;
   color: $color-white;
   margin: 0;
   padding: 3px 5px;
-  left: 0;
   position: fixed;
-  top: 0;
+  right: 0;
 }
 
 .ngx-grid {
