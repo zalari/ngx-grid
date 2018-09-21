@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "@zalari/ngx-grid",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A grid system for Angular.",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "build:lib": "ng-packagr -p package.json && cpx -p README.md dist",
     "build:demo": "sh scripts/demo.sh",
     "build": "npm run build:lib && npm run build:demo",
-    "start": "npm run build && cd .temp && ng serve --port 4444 --watch=false --progress=false --live-reload=false --open=true",
+    "start": "npm run build && cd .temp && ng serve --port 4444 --host 0.0.0.0 --disable-host-check --progress --open",
     "lint:sass": "sass-lint --verbose --no-exit --config ./sass-lint.yml",
     "lint:ts": "tslint --force --config ./tslint.yml --project ./tsconfig.json",
     "lint": "npm run lint:ts && npm run lint:sass",
@@ -47,18 +47,19 @@
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
-    "@angular/cli": "6.0.8",
-    "@angular/common": "6.0.5",
-    "@angular/compiler": "6.0.5",
-    "@angular/compiler-cli": "6.0.5",
-    "@angular/core": "6.0.5",
-    "codelyzer": "4.3.0",
-    "ng-packagr": "3.0.2",
-    "rxjs-tslint": "0.1.4",
-    "rxjs-tslint-rules": "4.4.1",
+    "@angular/cli": "6.2.3",
+    "@angular/common": "6.1.8",
+    "@angular/compiler": "6.1.8",
+    "@angular/compiler-cli": "6.1.8",
+    "@angular/core": "6.1.8",
+    "codelyzer": "4.4.4",
+    "cpx": "1.5.0",
+    "ng-packagr": "4.2.0",
+    "rxjs-tslint": "0.1.5",
+    "rxjs-tslint-rules": "4.8.0",
     "sass-lint": "1.12.1",
-    "tsickle": "0.29.0",
-    "tslint": "5.10.0",
-    "typescript": "2.7.2"
+    "tsickle": "0.33.0",
+    "tslint": "5.11.0",
+    "typescript": "2.9.2"
   }
 }
