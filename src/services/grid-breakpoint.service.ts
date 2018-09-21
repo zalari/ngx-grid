@@ -74,8 +74,10 @@ export class GridBreakpointService {
             grid-gap: calc(var(--grid-gap) * 1px);
             grid-template-columns: repeat(var(--grid-cols), 1fr);
             grid-template-rows: repeat(var(--grid-rows), 1fr);
+          }
 
-            @media ${this._buildQuery(this._smallestBreakpoint)} {
+          @media ${this._buildQuery(this._smallestBreakpoint)} {
+            .ngx-grid {
               /* we want _no_ equal heights on the smallest viewport because usually we have only one column here... */
               grid-auto-rows: min-content;
             }
